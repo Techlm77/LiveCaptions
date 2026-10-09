@@ -109,7 +109,7 @@ static void update_window_transparency(LiveCaptionsWindow *self) {
 
         char css_data[256];
         snprintf(css_data, 256, ".transparent-mode {\nbackground-color: #000000%02X;\n}", transparency);
-        gtk_css_provider_load_from_data(self->css_provider, css_data, -1);
+        gtk_css_provider_load_from_string(self->css_provider, css_data);
     }else{
         gtk_widget_remove_css_class(GTK_WIDGET(self), "transparent-mode");
     }
@@ -196,8 +196,9 @@ static void livecaptions_window_init(LiveCaptionsWindow *self) {
     self->settings = g_settings_new("net.sapples.LiveCaptions");
 
     self->css_provider = gtk_css_provider_new();
-    GtkStyleContext *context = gtk_widget_get_style_context(GTK_WIDGET(self));
-    gtk_style_context_add_provider(context, GTK_STYLE_PROVIDER(self->css_provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    gtk_style_context_add_provider_for_display(gtk_widget_get_display(GTK_WIDGET(self)),
+                                               GTK_STYLE_PROVIDER(self->css_provider),
+                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
     g_signal_connect(self->settings, "changed", G_CALLBACK(on_settings_change), self);
     

@@ -244,12 +244,11 @@ livecaptions_application_show_preferences(G_GNUC_UNUSED GSimpleAction *action,
     LiveCaptionsApplication *self = LIVECAPTIONS_APPLICATION(user_data);
     if(self->welcome != NULL) return;
 
-    GtkApplication *app = GTK_APPLICATION(user_data);
-    GtkWindow *window = gtk_application_get_active_window (app);
-    LiveCaptionsSettings *preferences = g_object_new(LIVECAPTIONS_TYPE_SETTINGS, "application", GTK_APPLICATION(self), NULL);
+    LiveCaptionsSettings *preferences = g_object_new(LIVECAPTIONS_TYPE_SETTINGS, NULL);
     preferences->application = self;
 
-    gtk_window_present (GTK_WINDOW (preferences));
+    // No parent, so the preferences open in their own window instead of inside the captions bar
+    adw_dialog_present(ADW_DIALOG(preferences), NULL);
 
 }
 

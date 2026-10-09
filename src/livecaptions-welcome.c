@@ -173,11 +173,8 @@ static gboolean quit_after_1s(G_GNUC_UNUSED gpointer user_data) {
 
 const char perf_url[] = "https://github.com/abb128/LiveCaptions/issues/40";
 static void report_perf_cb(LiveCaptionsWelcome *self){
-    gtk_show_uri(
-        GTK_WINDOW(self),
-        perf_url,
-        GDK_CURRENT_TIME
-    );
+    g_autoptr(GtkUriLauncher) launcher = gtk_uri_launcher_new(perf_url);
+    gtk_uri_launcher_launch(launcher, GTK_WINDOW(self), NULL, NULL, NULL);
 
     // Quitting here quits before uri is shown, need to wait a moment
     self->quit_time = time(NULL);

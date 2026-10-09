@@ -38,6 +38,9 @@ static bool set_window_keep_above_wayland(GtkWindow *window, bool keep_above) {
 #define _NET_WM_STATE_REMOVE        0    /* remove/unset property */
 #define _NET_WM_STATE_ADD           1    /* add/set property */
 #define _NET_WM_STATE_TOGGLE        2    /* toggle property  */
+
+// GTK deprecated its whole X11 backend with no replacement for these accessors
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
 static bool set_window_keep_above_x11(GtkWindow *window, bool keep_above) {
     GdkX11Display *display = GDK_X11_DISPLAY(gtk_widget_get_display(GTK_WIDGET(window)));
     GdkX11Surface *surface = GDK_X11_SURFACE(gtk_native_get_surface(gtk_widget_get_native(GTK_WIDGET(window))));
@@ -63,6 +66,7 @@ static bool set_window_keep_above_x11(GtkWindow *window, bool keep_above) {
 
     return true;
 }
+G_GNUC_END_IGNORE_DEPRECATIONS
 #endif
 
 
@@ -72,10 +76,10 @@ void override_keep_above_system(bool override) {
     is_keep_above_overridden = override;
 }
 
-bool is_keep_above_supported(GtkWindow *window) {
+bool is_keep_above_supported(GtkWidget *widget) {
     if(is_keep_above_overridden) return true;
 
-    GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(window));
+    GdkDisplay *display = gtk_widget_get_display(widget);
 
     #ifdef GDK_WINDOWING_X11
     if(GDK_IS_X11_DISPLAY(display))
