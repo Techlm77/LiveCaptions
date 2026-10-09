@@ -260,7 +260,7 @@ bool asr_thread_update_model(asr_thread data, const char *model_path) {
 
     AprilConfig config = {
         .handler = april_result_handler,
-        .flags = APRIL_CONFIG_FLAG_ASYNC_RT_BIT,
+        .flags = APRIL_CONFIG_FLAG_ASYNC_NO_RT_BIT,
         .userdata = data
     };
 
