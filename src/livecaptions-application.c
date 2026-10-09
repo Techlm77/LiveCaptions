@@ -119,7 +119,7 @@ static gboolean on_handle_allow_keep_above(DBLCapNetSapplesLiveCaptionsExternal 
                                            GDBusMethodInvocation *invocation,
                                            gpointer user_data)
 {
-    LiveCaptionsApplication *self = LIVECAPTIONS_APPLICATION(user_data);
+    (void)user_data;
 
     override_keep_above_system(true);
 
@@ -130,7 +130,7 @@ static gboolean on_handle_allow_keep_above(DBLCapNetSapplesLiveCaptionsExternal 
 static gboolean
 livecaptions_application_dbus_register(GApplication     *app,
                                        GDBusConnection  *connection,
-                                       const gchar      *object_path,
+                                       G_GNUC_UNUSED const gchar *object_path,
                                        GError          **error)
 {
     LiveCaptionsApplication *self = LIVECAPTIONS_APPLICATION(app);
@@ -172,6 +172,8 @@ livecaptions_application_dbus_unregister(GApplication    *app,
                                          GDBusConnection *connection,
                                          const gchar     *object_path)
 {
+    (void)connection;
+    (void)object_path;
     LiveCaptionsApplication *self = LIVECAPTIONS_APPLICATION(app);
 
     g_dbus_interface_skeleton_unexport(G_DBUS_INTERFACE_SKELETON(self->dbus_external));

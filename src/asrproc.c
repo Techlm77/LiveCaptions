@@ -121,6 +121,9 @@ static void april_result_handler(void* userdata, AprilResultType result, size_t 
     if((data->window == NULL) || (data->pause)) return;
 
     switch(result) {
+        case APRIL_RESULT_UNKNOWN:
+            break;
+
         case APRIL_RESULT_RECOGNITION_PARTIAL:
         case APRIL_RESULT_RECOGNITION_FINAL:
         {

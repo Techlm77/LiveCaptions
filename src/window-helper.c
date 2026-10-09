@@ -23,6 +23,9 @@
 #include <gdk/wayland/gdkwayland.h>
 
 static bool set_window_keep_above_wayland(GtkWindow *window, bool keep_above) {
+    (void)window;
+    (void)keep_above;
+
     // TODO: Plasma: https://wayland.app/protocols/kde-plasma-window-management#org_kde_plasma_window_management:enum:state:entry:keep_above
 
     return false;

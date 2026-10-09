@@ -226,7 +226,7 @@ static void model_load_failsafe(LiveCaptionsSettings *self, bool load_default);
 static void on_model_selected(GtkCheckButton* button, LiveCaptionsSettings *self){
     if(!gtk_check_button_get_active(button)) return;
 
-    const char *model = g_quark_to_string((GQuark)g_object_get_data(G_OBJECT(button), "lcap-model-path"));
+    const char *model = g_quark_to_string(GPOINTER_TO_UINT(g_object_get_data(G_OBJECT(button), "lcap-model-path")));
     if(!asr_thread_update_model(self->application->asr, model)) {
         model_load_failsafe(self, false);
         return;
@@ -244,7 +244,7 @@ static void on_builtin_toggled(LiveCaptionsSettings *self) {
 }
 
 static void on_model_deleted(GtkButton *button, LiveCaptionsSettings *self) {
-    const char *model = g_quark_to_string((GQuark)g_object_get_data(G_OBJECT(button), "lcap-model-path"));
+    const char *model = g_quark_to_string(GPOINTER_TO_UINT(g_object_get_data(G_OBJECT(button), "lcap-model-path")));
     if(g_str_equal(model, "/app/LiveCaptions/models/aprilv0_en-us.april")) return;
 
     char *active_model = g_settings_get_string(self->settings, "active-model");
@@ -306,7 +306,7 @@ static void insert_model_to_list(LiveCaptionsSettings *self, gchar *model) {
 
     g_free(active_model);
 
-    gpointer quark = (gpointer)g_quark_from_string(model);
+    gpointer quark = GUINT_TO_POINTER(g_quark_from_string(model));
 
     g_object_set_data(G_OBJECT(button), "lcap-model-path", quark);
     g_signal_connect(button, "toggled", G_CALLBACK(on_model_selected), self);

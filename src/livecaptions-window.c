@@ -59,7 +59,8 @@ static void update_line_width(LiveCaptionsWindow *self){
 
     int preferred_width = g_settings_get_int(self->settings, "line-width");
     size_t text_len = sizeof(LINE_WIDTH_TEXT_TEMPLATE);
-    if(preferred_width < text_len) text_len = preferred_width;
+    if (preferred_width >= 0 && (size_t)preferred_width < text_len)
+        text_len = (size_t)preferred_width;
 
     int width, height;
     PangoLayout *layout = gtk_label_get_layout(self->label);
