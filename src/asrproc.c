@@ -186,6 +186,10 @@ void asr_thread_enqueue_audio(asr_thread thread, short *data, size_t num_shorts)
 
     if(thread->silence_counter >= 24000){
         thread->silence_counter = 24000;
+        // April queues the flush in order with the audio, so speech fed after
+        // this starts a new utterance even if recognition is still behind.
+        // Waiting here would block audio capture. Repeated flushes during the
+        // same silence are no-ops.
         return aas_flush(thread->session);
     }
     

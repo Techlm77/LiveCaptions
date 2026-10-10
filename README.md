@@ -57,7 +57,14 @@ You can build this easily with GNOME Builder. After cloning, open the project di
 
 If you are using Flatpak GNOME Builder and experience issues running this (for example, some cryptic X Window System error), please try using your distro's native packaged version of GNOME Builder instead of Flatpak (e.g. `sudo apt install gnome-builder`).
 
-## Option 2: Building from the terminal (not as easy)
+## Option 2: Building with Nix
+The flake pins a nixpkgs revision that provides GTK 4.22 and libadwaita 1.9, and downloads the default model. It builds the `april-asr` submodule from the checkout, which requires Nix 2.27 or newer:
+```
+$ nix build
+$ ./result/bin/livecaptions
+```
+
+## Option 3: Building from the terminal (not as easy)
 First you must [download ONNXRuntime v1.14.1 (Linux)](https://github.com/microsoft/onnxruntime/releases/download/v1.14.1/onnxruntime-linux-x64-1.14.1.tgz) or [ONNXRuntime v.1.14.1 (Mac OS x86)](https://github.com/microsoft/onnxruntime/releases/download/v1.14.1/onnxruntime-osx-x86_64-1.14.1.tgz), extract it somewhere, and set the environment variables to point to it.
 
 ### Make ONNX available
@@ -82,7 +89,8 @@ $ cp /path/to/onnxruntime-osx-x86_64-1.14.1/lib/libonnxruntime.dylib /usr/local/
 You will also need the following prerequisites:
 ```
 pulseaudio
-libadwaita
+gtk4 (>= 4.12)
+libadwaita (>= 1.5)
 meson
 ninja
 ```

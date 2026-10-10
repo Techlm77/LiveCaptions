@@ -24,6 +24,11 @@
 #include "window-helper.h"
 #include "history.h"
 
+// Unprocessed audio thresholds for the slow warnings
+#define SLOW_BACKLOG_MS (500)
+#define SLOWEST_BACKLOG_MS (1200)
+#define TOO_SLOW_BACKLOG_MS (2000)
+
 
 G_DEFINE_TYPE(LiveCaptionsWindow, livecaptions_window, GTK_TYPE_APPLICATION_WINDOW)
 
@@ -167,24 +172,20 @@ static gboolean show_relevant_slow_warning(void *userdata) {
     AprilASRSession session = (AprilASRSession)asr_thread_get_session(asr);
     if(session == NULL) return G_SOURCE_CONTINUE;
 
-    float speedup = aas_realtime_get_speedup(session);
+    // Sessions run in ASYNC_NO_RT mode, where audio is never sped up, so the
+    // speedup is always 1.0. The unprocessed backlog shows falling behind;
+    // April drops audio once about 3 seconds are queued.
+    size_t backlog_ms = aas_get_backlog_ms(session);
 
-    if(speedup <= 1.1) {
-        gtk_widget_set_visible(GTK_WIDGET(self->slow_warning), false);
-        gtk_widget_set_visible(GTK_WIDGET(self->slowest_warning), false);
-        gtk_widget_set_visible(GTK_WIDGET(self->too_slow_warning), false);
-    }else if(speedup <= 1.666) {
-        gtk_widget_set_visible(GTK_WIDGET(self->slow_warning), true);
-        gtk_widget_set_visible(GTK_WIDGET(self->slowest_warning), false);
-        gtk_widget_set_visible(GTK_WIDGET(self->too_slow_warning), false);
-    }else if(speedup <= 2.33){
-        gtk_widget_set_visible(GTK_WIDGET(self->slow_warning), false);
-        gtk_widget_set_visible(GTK_WIDGET(self->slowest_warning), true);
-        gtk_widget_set_visible(GTK_WIDGET(self->too_slow_warning), false);
-    }else{
-        gtk_widget_set_visible(GTK_WIDGET(self->slow_warning), false);
-        gtk_widget_set_visible(GTK_WIDGET(self->slowest_warning), false);
+    gtk_widget_set_visible(GTK_WIDGET(self->slow_warning), backlog_ms > SLOW_BACKLOG_MS && backlog_ms <= SLOWEST_BACKLOG_MS);
+    gtk_widget_set_visible(GTK_WIDGET(self->slowest_warning), backlog_ms > SLOWEST_BACKLOG_MS && backlog_ms <= TOO_SLOW_BACKLOG_MS);
+
+    // The too-slow warning is also raised by dropped-audio callbacks, which
+    // hide it themselves once they stop
+    if(backlog_ms > TOO_SLOW_BACKLOG_MS) {
         gtk_widget_set_visible(GTK_WIDGET(self->too_slow_warning), true);
+    } else if(!self->slow_warning_shown) {
+        gtk_widget_set_visible(GTK_WIDGET(self->too_slow_warning), false);
     }
 
     return G_SOURCE_CONTINUE;

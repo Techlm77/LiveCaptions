@@ -91,7 +91,7 @@ static gboolean benchmark_finish(gpointer userdata){
 
     if(self->benchmark_result_v < MINIMUM_BENCHMARK_RESULT) {
         gtk_stack_set_visible_child(self->stack, GTK_WIDGET(self->benchmark_result_bad));
-    } else if(self->benchmark_result_v < 1.1) {
+    } else if(self->benchmark_result_v < GOOD_BENCHMARK_RESULT) {
         gtk_stack_set_visible_child(self->stack, GTK_WIDGET(self->benchmark_result_q));
     } else {
         gtk_stack_set_visible_child(self->stack, GTK_WIDGET(self->benchmark_result_good));

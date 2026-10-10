@@ -37,10 +37,13 @@ static void deinit_audio(LiveCaptionsApplication *self){
 static void init_audio(LiveCaptionsApplication *self) {
     deinit_audio(self);
 
+    // End the previous source's utterance while no capture thread is feeding,
+    // so the session keeps a single feeder and the boundary falls between
+    // the two sources.
+    asr_thread_flush(self->asr);
+
     gboolean use_microphone = g_settings_get_boolean(self->settings, "microphone");
     self->audio = create_audio_thread(use_microphone, self->asr);
-
-    asr_thread_flush(self->asr);
 }
 
 LiveCaptionsApplication *livecaptions_application_new (gchar *application_id, GApplicationFlags flags) {
