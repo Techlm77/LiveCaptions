@@ -7,9 +7,12 @@ cd "$(dirname "$0")"
 model=april-english-dev-01110_en.april
 ort_sdk=subprojects/april-asr/lib
 
-if [ ! -f subprojects/april-asr/CMakeLists.txt ]; then
-    echo "Fetching the april-asr submodule..."
+# Check out the april-asr version this commit expects, also after git pull
+if [ -d .git ] || [ -f .git ]; then
     git submodule update --init --recursive
+elif [ ! -f subprojects/april-asr/CMakeLists.txt ]; then
+    echo "subprojects/april-asr is missing. Clone with git clone --recursive." >&2
+    exit 1
 fi
 
 # Use a distro ONNX Runtime if there is one, else download the official SDK.
