@@ -44,7 +44,7 @@ Thanks to Fangjun Kuang for the [pretrained model](https://huggingface.co/csukua
 # Building
 You must make sure to do a recursive clone to get dependencies:
 ```
-$ git clone --recursive https://github.com/Techlm77/LiveCaptions.git
+$ git clone --recursive https://github.com/abb128/LiveCaptions.git
 ```
 
 If you forgot, you can initialize submodules like so:

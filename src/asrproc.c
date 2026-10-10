@@ -116,6 +116,14 @@ static gboolean main_thread_update_label(void *userdata){
     return G_SOURCE_REMOVE;
 }
 
+static gboolean main_thread_warn_slow(void *userdata){
+    asr_thread data = userdata;
+
+    if(data->window != NULL) livecaptions_window_warn_slow(data->window);
+
+    return G_SOURCE_REMOVE;
+}
+
 static void april_result_handler(void* userdata, AprilResultType result, size_t count, const AprilToken* tokens) {
     asr_thread data = userdata;
     if((data->window == NULL) || (data->pause)) return;
@@ -151,7 +159,8 @@ static void april_result_handler(void* userdata, AprilResultType result, size_t 
         }
 
         case APRIL_RESULT_ERROR_CANT_KEEP_UP: {
-            livecaptions_window_warn_slow(data->window);
+            // Called on April's worker thread; GTK must be used from the main one
+            g_idle_add(main_thread_warn_slow, data);
             break;
         }
 
