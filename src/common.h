@@ -20,7 +20,8 @@
 
 #define SWEAR_REPLACEMENT " [__]"
 
-#define LIVECAPTIONS_VERSION "0.4.1"
+#include "livecaptions-config.h"
+#define LIVECAPTIONS_VERSION PACKAGE_VERSION
 
 // Recognition runs without time compression (ASYNC_NO_RT), so anything below
 // 1.0x real time accumulates a backlog until audio is dropped. Require

@@ -97,7 +97,17 @@ $ nix build
 $ ./result/bin/livecaptions
 ```
 
-## Option 3: Building with GNOME Builder
+## Option 3: Building a Flatpak
+With `flatpak-builder` installed and the Flathub remote added:
+```
+$ flatpak install --user flathub org.gnome.Sdk//50 org.gnome.Platform//50
+$ flatpak-builder --user --install --force-clean build-dir build-aux/flatpak/net.sapples.LiveCaptions.json
+$ flatpak run net.sapples.LiveCaptions
+```
+
+The manifest builds this checkout, and bundles ONNX Runtime and the default model.
+
+## Option 4: Building with GNOME Builder
 You can build this with GNOME Builder. After cloning, open the project directory in GNOME Builder, download the SDK if it asks you, and click the play button to build and run.
 
 If you are using Flatpak GNOME Builder and experience issues running this (for example, some cryptic X Window System error), please try using your distro's native packaged version of GNOME Builder instead of Flatpak (e.g. `sudo apt install gnome-builder`).
